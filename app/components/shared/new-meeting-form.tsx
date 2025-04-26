@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { addBotToMeeting } from "@/lib/actions/meeting.actions";
 
 const formSchema = z.object({
     meetingLink: z
@@ -29,6 +30,7 @@ const formSchema = z.object({
 
 export function NewMeetingForm() {
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const router = useRouter();
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -41,12 +43,20 @@ export function NewMeetingForm() {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
             setIsSubmitting(true);
-            // TODO: Handle the meeting link submission
-            console.log(values);
-            // For now, just redirect back to dashboard
-            router.push("/dashboard");
+            setError(null);
+
+            const botId = await addBotToMeeting(values.meetingLink);
+
+            // if (botId) {
+            //     router.push("/dashboard");
+            // }
         } catch (error) {
             console.error("Error submitting meeting link:", error);
+            setError(
+                error instanceof Error
+                    ? error.message
+                    : "Failed to add bot to meeting"
+            );
         } finally {
             setIsSubmitting(false);
         }
@@ -75,11 +85,12 @@ export function NewMeetingForm() {
                         </FormItem>
                     )}
                 />
+                {error && <div className="text-sm text-red-500">{error}</div>}
                 <Button type="submit" disabled={isSubmitting}>
                     {isSubmitting ? (
                         <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Processing...
+                            Adding bot to meeting...
                         </>
                     ) : (
                         "Start Analysis"
