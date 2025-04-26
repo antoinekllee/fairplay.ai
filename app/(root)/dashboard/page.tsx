@@ -3,6 +3,9 @@ import { getReports } from "@/lib/actions/report.actions";
 import { FounderDataCard } from "@/app/components/shared/founder-data-card";
 import { InvestorDataCard } from "@/app/components/shared/investor-data-card";
 import { ReportsGrid } from "@/app/components/shared/reports-grid";
+import { GenerateReportButton } from "@/app/components/shared/generate-report-button";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default async function DashboardPage() {
     // const user = await getUser();
@@ -20,6 +23,12 @@ export default async function DashboardPage() {
 
     return (
         <div className="space-y-8 p-6">
+            <div className="flex justify-end gap-4">
+                <Button asChild variant="outline">
+                    <Link href="/new">New Meeting</Link>
+                </Button>
+                <GenerateReportButton />
+            </div>
             {/* {user.onboardingData.userRole === "founder" &&
                 user.onboardingData.founderData && (
                     <FounderDataCard

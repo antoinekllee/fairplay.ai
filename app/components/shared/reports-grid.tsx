@@ -1,12 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { createReport } from "@/lib/actions/report.actions";
-import { mockReportData } from "./review/meeting-dashboard";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Loader2 } from "lucide-react";
 
 type ReportsGridProps = {
     reports: ReportData[];
@@ -14,19 +9,6 @@ type ReportsGridProps = {
 
 export function ReportsGrid({ reports }: ReportsGridProps) {
     const router = useRouter();
-    const [isGenerating, setIsGenerating] = useState(false);
-
-    const handleGenerateDummy = async () => {
-        try {
-            setIsGenerating(true);
-            await createReport(mockReportData);
-            router.refresh();
-        } catch (error) {
-            console.error("Error generating dummy report:", error);
-        } finally {
-            setIsGenerating(false);
-        }
-    };
 
     return (
         <div className="space-y-6">
@@ -34,20 +16,6 @@ export function ReportsGrid({ reports }: ReportsGridProps) {
                 <h2 className="text-2xl font-bold tracking-tight">
                     Your Reports
                 </h2>
-                <Button
-                    onClick={handleGenerateDummy}
-                    disabled={isGenerating}
-                    className="min-w-[180px]"
-                >
-                    {isGenerating ? (
-                        <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Generating...
-                        </>
-                    ) : (
-                        "Generate Demo Report"
-                    )}
-                </Button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
