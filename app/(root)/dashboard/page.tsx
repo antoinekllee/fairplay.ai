@@ -1,6 +1,6 @@
 import { getUser } from "@/lib/actions/user.actions";
-import { FounderDataCard } from "@/app/components/dashboard/founder-data-card";
-import { InvestorDataCard } from "@/app/components/dashboard/investor-data-card";
+import { FounderDataCard } from "@/app/components/shared/founder-data-card";
+import { InvestorDataCard } from "@/app/components/shared/investor-data-card";
 
 export default async function DashboardPage() {
     const user = await getUser();

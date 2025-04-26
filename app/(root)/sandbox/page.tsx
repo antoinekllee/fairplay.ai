@@ -1,6 +1,7 @@
 import { getUser } from "@/lib/actions/user.actions";
-import { FounderDataCard } from "@/app/components/dashboard/founder-data-card";
-import { InvestorDataCard } from "@/app/components/dashboard/investor-data-card";
+import { FounderDataCard } from "@/app/components/shared/founder-data-card";
+import { InvestorDataCard } from "@/app/components/shared/investor-data-card";
+import MeetingDashboard from "@/app/components/shared/review/meeting-dashboard";
 
 export default async function SandboxPage() {
     const user = await getUser();
@@ -30,6 +31,8 @@ export default async function SandboxPage() {
                         onboardingData={user.onboardingData.investorData}
                     />
                 )}
+
+            <MeetingDashboard />
         </div>
     );
 }
