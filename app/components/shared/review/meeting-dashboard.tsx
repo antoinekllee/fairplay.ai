@@ -5,7 +5,13 @@ import { SummaryCards } from "./summary-cards";
 import { QuestionsList } from "./questions-list";
 import { ReportSection } from "./report-section";
 
-export default function MeetingDashboard() {
+type MeetingDashboardProps = {
+    reportData?: ReportData;
+};
+
+export default function MeetingDashboard({
+    reportData = mockReportData,
+}: MeetingDashboardProps) {
     return (
         <div className="container mx-auto py-8 px-4">
             <div className="mb-8">
@@ -27,9 +33,9 @@ export default function MeetingDashboard() {
                 </TabsList>
 
                 <TabsContent value="insights" className="space-y-8">
-                    <SummaryCards />
-                    <QuestionsList />
-                    <ReportSection />
+                    <SummaryCards data={reportData} />
+                    <QuestionsList data={reportData} />
+                    <ReportSection data={reportData} />
                 </TabsContent>
 
                 <TabsContent value="transcript">
@@ -39,7 +45,7 @@ export default function MeetingDashboard() {
                         </h2>
                         <div className="bg-gray-50 p-4 rounded overflow-auto max-h-[600px] text-sm">
                             <pre className="whitespace-pre-wrap font-sans">
-                                {mockMeetingData.transcript}
+                                {reportData.transcript}
                             </pre>
                         </div>
                     </div>
@@ -50,23 +56,16 @@ export default function MeetingDashboard() {
 }
 
 // Mock data for the dashboard
-export const mockMeetingData = {
-    meetingId: "m-2025-04-24-001",
-    date: "2025-04-24T14:30:00Z",
-    duration: "58m 42s",
+export const mockReportData: ReportData = {
     participants: {
         founder: {
-            name: "Sarah Johnson",
-            company: "EcoTech Solutions",
-            talkTime: 2340, // in seconds
+            talkTime: 2340,
             interruptions: 3,
             sentiment: "Positive",
             sentimentScore: 0.78,
         },
         vc: {
-            name: "Michael Chen",
-            firm: "Horizon Ventures",
-            talkTime: 1182, // in seconds
+            talkTime: 1182,
             interruptions: 7,
             sentiment: "Neutral",
             sentimentScore: 0.52,

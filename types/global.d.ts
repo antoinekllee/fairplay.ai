@@ -62,3 +62,55 @@ declare type UpdateUserParams = {
     photo: string;
     onboardingData?: OnboardingData;
 };
+
+// MEETING REPORT DATA
+
+declare type Participant = {
+    userId?: string;
+    talkTime: number;
+    interruptions: number;
+    sentiment: string;
+    sentimentScore: number;
+};
+
+declare type Summary = {
+    promotionQuestions: number;
+    preventionQuestions: number;
+    keywordTriggers: string[];
+    overallTone: string;
+};
+
+declare type Question = {
+    id: string;
+    type: "prevention" | "promotion";
+    question: string;
+    answer: string;
+    talkTime: {
+        founder: number;
+        vc: number;
+    };
+    interruptions: {
+        founder: number;
+        vc: number;
+    };
+    sentiment: {
+        founder: string;
+        vc: string;
+    };
+    keywords: string[];
+    analysis: string;
+};
+
+declare type ReportData = {
+    _id?: string;
+    participants: {
+        founder: Participant;
+        vc: Participant;
+    };
+    summary: Summary;
+    questions: Question[];
+    transcript: string;
+    reports: any;
+    createdAt?: string | Date;
+    updatedAt?: string | Date;
+};
