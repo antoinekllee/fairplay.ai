@@ -32,6 +32,9 @@ export async function addBotToMeeting(meetingLink: string) {
                     bot_name: "FairPlayAI Bot",
                     audio_required: true,
                     video_required: false,
+                    live_transcription_required: {
+                        webhook_url: `https://dove-engaging-leech.ngrok-free.app/api/webhook/transcripts`,
+                    },
                 }),
             }
         );
