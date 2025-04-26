@@ -9,8 +9,9 @@ import {
     updateMeetingWithReport,
     checkMeetingStatus,
     getMeetingTranscript,
+    getMeetingAudio,
 } from "@/lib/actions/meeting.actions";
-import { Loader2, FileText } from "lucide-react";
+import { Loader2, FileText, Volume2 } from "lucide-react";
 import { toast } from "sonner";
 
 type MeetingStatus = "Joining" | "InMeeting" | "Stopped" | "error";
@@ -38,7 +39,10 @@ export default function MeetingPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [isGenerating, setIsGenerating] = useState(false);
     const [isLoadingTranscript, setIsLoadingTranscript] = useState(false);
+    const [isLoadingAudio, setIsLoadingAudio] = useState(false);
     const [transcript, setTranscript] = useState<Transcript | null>(null);
+    const [audioUrl, setAudioUrl] = useState<string | null>(null);
+
     async function handleCheckMeetingStatus() {
         try {
             const result = await checkMeetingStatus(id as string);
@@ -101,6 +105,40 @@ export default function MeetingPage() {
             setIsLoadingTranscript(false);
         }
     }
+
+    async function handleGetAudio() {
+        try {
+            setIsLoadingAudio(true);
+            const result = await getMeetingAudio(id as string);
+
+            if (!result.success || !result.audioData) {
+                toast.error(result.error || "Failed to get audio");
+                return;
+            }
+
+            // Create a blob URL from the base64 audio data
+            const blob = new Blob([Buffer.from(result.audioData, "base64")], {
+                type: "audio/mpeg",
+            });
+            const url = URL.createObjectURL(blob);
+            setAudioUrl(url);
+            toast.success("Audio loaded successfully!");
+        } catch (error) {
+            console.error("Error getting audio:", error);
+            toast.error("Failed to get audio");
+        } finally {
+            setIsLoadingAudio(false);
+        }
+    }
+
+    // Cleanup blob URL on unmount
+    useEffect(() => {
+        return () => {
+            if (audioUrl) {
+                URL.revokeObjectURL(audioUrl);
+            }
+        };
+    }, [audioUrl]);
 
     useEffect(() => {
         handleCheckMeetingStatus();
@@ -167,7 +205,39 @@ export default function MeetingPage() {
                                         </>
                                     )}
                                 </Button>
+
+                                <Button
+                                    size="lg"
+                                    variant="outline"
+                                    onClick={handleGetAudio}
+                                    disabled={isLoadingAudio}
+                                >
+                                    {isLoadingAudio ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            Loading Audio...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Volume2 className="mr-2 h-4 w-4" />
+                                            Get Audio
+                                        </>
+                                    )}
+                                </Button>
                             </div>
+
+                            {audioUrl && (
+                                <div className="w-full max-w-md mt-4">
+                                    <audio
+                                        controls
+                                        className="w-full"
+                                        src={audioUrl}
+                                    >
+                                        Your browser does not support the audio
+                                        element.
+                                    </audio>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </Card>

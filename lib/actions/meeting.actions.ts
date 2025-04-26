@@ -223,3 +223,59 @@ export async function getMeetingTranscript(
         };
     }
 }
+
+export async function getMeetingAudio(
+    meetingId: string
+): Promise<{ success: boolean; audioData?: string; error?: string }> {
+    try {
+        const API_KEY = process.env.MEETSTREAM_API_KEY;
+        if (!API_KEY) {
+            throw new Error("MEETSTREAM_API_KEY is not configured");
+        }
+
+        // Connect to database and get meeting
+        await connectToDatabase();
+        const meeting = await Meeting.findById(meetingId);
+
+        if (!meeting) {
+            throw new Error("Meeting not found");
+        }
+
+        const response = await fetch(
+            `https://api-meetstream-tst-hack.meetstream.ai/api/v1/bots/${meeting.botId}/get_audio`,
+            {
+                headers: {
+                    Authorization: `Token ${API_KEY}`,
+                },
+            }
+        );
+
+        if (!response.ok) {
+            if (response.status === 404) {
+                return {
+                    success: false,
+                    error: "Audio not available yet",
+                };
+            }
+            throw new Error(`Failed to get audio: ${response.statusText}`);
+        }
+
+        // Convert the audio buffer to base64
+        const arrayBuffer = await response.arrayBuffer();
+        const base64Audio = Buffer.from(arrayBuffer).toString("base64");
+
+        console.log("Audio:", base64Audio);
+
+        return {
+            success: true,
+            audioData: base64Audio,
+        };
+    } catch (error) {
+        console.error("Error getting meeting audio:", error);
+        return {
+            success: false,
+            error:
+                error instanceof Error ? error.message : "Failed to get audio",
+        };
+    }
+}
