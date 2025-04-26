@@ -9,6 +9,7 @@ import fs from "fs/promises";
 import path from "path";
 import { SYSTEM_PROMPT } from "@/constants/prompt";
 import { getMeetingAudio, getMeetingTranscript } from "./meeting.actions";
+import { redirect } from "next/navigation";
 
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
@@ -200,12 +201,12 @@ async function processAudioAndTranscript(
                 {
                     role: "user",
                     parts: [
-                        {
-                            inlineData: {
-                                mimeType: "audio/wav",
-                                data: audioBase64,
-                            },
-                        },
+                        // {
+                        //     inlineData: {
+                        //         mimeType: "audio/wav",
+                        //         data: audioBase64,
+                        //     },
+                        // },
                         { text: `Transcript:\n${transcriptText}` },
                     ],
                 },
@@ -323,6 +324,8 @@ export async function createReport(meetingId: string) {
 
         const newReport = await Report.create(generatedReport);
         revalidatePath("/dashboard");
+
+        redirect(`/reports/${newReport._id}`);
 
         return JSON.parse(JSON.stringify(newReport));
     } catch (error) {

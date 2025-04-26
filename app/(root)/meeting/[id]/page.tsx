@@ -51,6 +51,11 @@ export default function MeetingPage() {
                 return;
             }
 
+            if (result.reportId) {
+                router.push(`/reports/${result.reportId}`);
+                return;
+            }
+
             setStatus(result.status as MeetingStatus);
             setLastUpdated(new Date());
         } catch (error) {
@@ -140,8 +145,13 @@ export default function MeetingPage() {
         };
     }, [audioUrl]);
 
+    // Add initial redirect check
     useEffect(() => {
         handleCheckMeetingStatus();
+    }, []);
+
+    // Add polling effect separately
+    useEffect(() => {
         const interval = setInterval(handleCheckMeetingStatus, 5000);
         return () => clearInterval(interval);
     }, []);
