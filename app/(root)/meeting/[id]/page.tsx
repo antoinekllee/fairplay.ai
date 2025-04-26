@@ -118,7 +118,7 @@ export default function MeetingPage() {
 
             // Create a blob URL from the base64 audio data
             const blob = new Blob([Buffer.from(result.audioData, "base64")], {
-                type: "audio/mpeg",
+                type: "audio/wav",
             });
             const url = URL.createObjectURL(blob);
             setAudioUrl(url);

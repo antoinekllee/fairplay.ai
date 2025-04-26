@@ -8,6 +8,7 @@ import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 import fs from "fs/promises";
 import path from "path";
 import { SYSTEM_PROMPT } from "@/constants/prompt";
+import { getMeetingAudio, getMeetingTranscript } from "./meeting.actions";
 
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
@@ -173,27 +174,11 @@ const reportResponseSchema = {
 };
 
 async function processAudioAndTranscript(
-    audioPath: string,
-    transcriptPath: string
+    audioBase64: string,
+    transcriptText: string
 ) {
     try {
         console.log("🚀 Starting audio and transcript processing...");
-        console.log("📂 Reading files from:", { audioPath, transcriptPath });
-
-        // Read the audio file
-        const audioFile = await fs.readFile(audioPath);
-        const audioBase64 = audioFile.toString("base64");
-        console.log("🎵 Audio file read successfully", {
-            audioSizeBytes: audioFile.length,
-            base64Length: audioBase64.length,
-        });
-
-        // Read the transcript
-        const transcript = await fs.readFile(transcriptPath, "utf-8");
-        console.log("📝 Transcript read successfully", {
-            transcriptLength: transcript.length,
-            previewText: transcript.slice(0, 100) + "...",
-        });
 
         // Setup Gemini model
         console.log("🤖 Initializing Gemini model...");
@@ -217,11 +202,11 @@ async function processAudioAndTranscript(
                     parts: [
                         {
                             inlineData: {
-                                mimeType: "audio/m4a",
+                                mimeType: "audio/wav",
                                 data: audioBase64,
                             },
                         },
-                        { text: `Transcript:\n${transcript}` },
+                        { text: `Transcript:\n${transcriptText}` },
                     ],
                 },
             ],
@@ -301,25 +286,31 @@ export async function createReport(meetingId: string) {
         const user = await getUser();
         if (!user) throw new Error("User not found");
 
-        // For now, use test data
-        const audioPath = path.join(
-            process.cwd(),
-            "public",
-            "data",
-            "test1",
-            "audio.m4a"
-        );
-        const transcriptPath = path.join(
-            process.cwd(),
-            "public",
-            "data",
-            "test1",
-            "transcript.txt"
-        );
+        // Get the meeting audio and transcript
+        const audioResult = await getMeetingAudio(meetingId);
+        if (!audioResult.success || !audioResult.audioData) {
+            throw new Error(audioResult.error || "Failed to get meeting audio");
+        }
 
+        const transcriptResult = await getMeetingTranscript(meetingId);
+        if (!transcriptResult.success || !transcriptResult.data) {
+            throw new Error(
+                transcriptResult.error || "Failed to get meeting transcript"
+            );
+        }
+
+        // Convert transcript array to string format expected by Gemini
+        const transcriptText = transcriptResult.data
+            .map(
+                (entry: { speaker: string; transcript: string }) =>
+                    `${entry.speaker}: ${entry.transcript}`
+            )
+            .join("\n");
+
+        // Process the audio and transcript directly with Gemini
         const generatedReport = await processAudioAndTranscript(
-            audioPath,
-            transcriptPath
+            audioResult.audioData,
+            transcriptText
         );
 
         // Add the current user's ID to the appropriate participant
