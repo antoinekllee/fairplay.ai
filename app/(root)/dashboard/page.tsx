@@ -1,6 +1,6 @@
 import { getUser } from "@/lib/actions/user.actions";
-import { FounderDashboard } from "@/app/components/dashboard/founder-dashboard";
-import { InvestorDashboard } from "@/app/components/dashboard/investor-dashboard";
+import { FounderDataCard } from "@/app/components/dashboard/founder-data-card";
+import { InvestorDataCard } from "@/app/components/dashboard/investor-data-card";
 
 export default async function DashboardPage() {
     const user = await getUser();
@@ -19,14 +19,14 @@ export default async function DashboardPage() {
         <div className="space-y-8 p-6">
             {user.onboardingData.userRole === "founder" &&
                 user.onboardingData.founderData && (
-                    <FounderDashboard
+                    <FounderDataCard
                         onboardingData={user.onboardingData.founderData}
                     />
                 )}
 
             {user.onboardingData.userRole === "investor" &&
                 user.onboardingData.investorData && (
-                    <InvestorDashboard
+                    <InvestorDataCard
                         onboardingData={user.onboardingData.investorData}
                     />
                 )}

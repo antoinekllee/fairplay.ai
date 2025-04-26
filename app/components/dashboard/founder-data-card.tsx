@@ -1,11 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-type FounderDashboardProps = {
+type FounderDataCardProps = {
     onboardingData: FounderOnboardingData;
 };
 
-export function FounderDashboard({ onboardingData }: FounderDashboardProps) {
+export function FounderDataCard({ onboardingData }: FounderDataCardProps) {
     return (
         <Card className="w-full">
             <CardHeader>

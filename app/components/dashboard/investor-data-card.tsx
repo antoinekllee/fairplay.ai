@@ -1,10 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-type InvestorDashboardProps = {
+type InvestorDataCardProps = {
     onboardingData: InvestorOnboardingData;
 };
 
-export function InvestorDashboard({ onboardingData }: InvestorDashboardProps) {
+export function InvestorDataCard({ onboardingData }: InvestorDataCardProps) {
     return (
         <Card className="w-full">
             <CardHeader>

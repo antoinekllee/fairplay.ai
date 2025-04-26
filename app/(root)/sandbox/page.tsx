@@ -1,7 +1,35 @@
-import React from "react";
+import { getUser } from "@/lib/actions/user.actions";
+import { FounderDataCard } from "@/app/components/dashboard/founder-data-card";
+import { InvestorDataCard } from "@/app/components/dashboard/investor-data-card";
 
-const SandboxPage = () => {
-    return <div>SandboxPage</div>;
-};
+export default async function SandboxPage() {
+    const user = await getUser();
 
-export default SandboxPage;
+    if (!user?.onboardingData) {
+        return (
+            <div className="flex items-center justify-center min-h-[200px]">
+                <p className="text-muted-foreground">
+                    Please complete onboarding to view your dashboard.
+                </p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="space-y-8 p-6">
+            {user.onboardingData.userRole === "founder" &&
+                user.onboardingData.founderData && (
+                    <FounderDataCard
+                        onboardingData={user.onboardingData.founderData}
+                    />
+                )}
+
+            {user.onboardingData.userRole === "investor" &&
+                user.onboardingData.investorData && (
+                    <InvestorDataCard
+                        onboardingData={user.onboardingData.investorData}
+                    />
+                )}
+        </div>
+    );
+}
