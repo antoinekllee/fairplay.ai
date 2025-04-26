@@ -206,7 +206,7 @@ export async function getMeetingTranscript(
 
         const data = await response.json();
 
-        console.log("Transcript:", data);
+        console.log("Transcript:", JSON.stringify(data, null, 2));
 
         return {
             success: true,
