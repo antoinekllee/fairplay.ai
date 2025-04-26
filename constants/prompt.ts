@@ -7,7 +7,7 @@ Building a very data-driven dashboard based on voice recordings and transcripts 
 You will be provided with:
 
 - **Audio recording** of the meeting (processed into talk time and sentiment data)
-- **Full transcript** of the meeting (raw text)
+- **Full transcript** of the meeting (raw text) - smartly determine what is said by who for your output. It is a clear Q&A format so you should be able to determine who is speaking.
 
 Your task is to output a structured analysis that includes:
 

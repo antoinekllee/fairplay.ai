@@ -304,7 +304,7 @@ export async function createReport(meetingId: string) {
         const transcriptText = transcriptResult.data
             .map(
                 (entry: { speaker: string; transcript: string }) =>
-                    `${entry.speaker}: ${entry.transcript}`
+                    `${entry.transcript}`
             )
             .join("\n");
 
