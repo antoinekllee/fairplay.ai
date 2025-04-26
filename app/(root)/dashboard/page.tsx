@@ -7,18 +7,18 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export default async function DashboardPage() {
-    const user = await getUser();
+    // const user = await getUser();
     const meetings = await getMeetings();
 
-    if (!user?.onboardingData) {
-        return (
-            <div className="flex items-center justify-center min-h-[200px]">
-                <p className="text-muted-foreground">
-                    Please complete onboarding to view your dashboard.
-                </p>
-            </div>
-        );
-    }
+    // if (!user?.onboardingData) {
+    //     return (
+    //         <div className="flex items-center justify-center min-h-[200px]">
+    //             <p className="text-muted-foreground">
+    //                 Please complete onboarding to view your dashboard.
+    //             </p>
+    //         </div>
+    //     );
+    // }
 
     return (
         <div className="space-y-8 p-6">
@@ -27,7 +27,7 @@ export default async function DashboardPage() {
                     <Link href="/meeting/new">New Meeting</Link>
                 </Button>
             </div>
-            {user.onboardingData.userRole === "founder" &&
+            {/* {user.onboardingData.userRole === "founder" &&
                 user.onboardingData.founderData && (
                     <FounderDataCard
                         onboardingData={user.onboardingData.founderData}
@@ -39,7 +39,7 @@ export default async function DashboardPage() {
                     <InvestorDataCard
                         onboardingData={user.onboardingData.investorData}
                     />
-                )}
+                )} */}
 
             <MeetingsGrid meetings={meetings} />
         </div>
