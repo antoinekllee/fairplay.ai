@@ -30,6 +30,16 @@ export default clerkMiddleware(async (auth, req) => {
         return NextResponse.redirect(onboardingUrl);
     }
 
+    // Redirect to dashboard if trying to access onboarding when it's already complete
+    if (
+        userId &&
+        sessionClaims?.metadata?.onboardingComplete &&
+        req.nextUrl.pathname === "/onboarding"
+    ) {
+        const dashboardUrl = new URL("/dashboard", req.url);
+        return NextResponse.redirect(dashboardUrl);
+    }
+
     // If the user is logged in and the route is protected, let them view.
     if (userId && !isPublicRoute(req)) {
         if (req.url.includes("/CLERKJS.NAVIGATE.COMPLETE")) {

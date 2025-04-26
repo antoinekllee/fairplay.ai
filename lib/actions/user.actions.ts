@@ -88,46 +88,38 @@ export async function getUser(): Promise<(User & mongoose.Document) | null> {
     return user ? JSON.parse(JSON.stringify(user)) : null;
 }
 
-// export async function completeOnboarding(onboardingData: {
-//     selectedCurriculums: string[];
-//     examPeriods: { course: string; examPeriod: string }[];
-//     selectedSubjects: UserSubject[];
-//     school: string;
-// }) {
-//     try {
-//         await connectToDatabase();
+export async function completeOnboarding(onboardingData: OnboardingData) {
+    try {
+        await connectToDatabase();
 
-//         const user = await getUser();
-//         if (!user) throw new Error("User not found");
+        const user = await getUser();
+        if (!user) throw new Error("User not found");
 
-//         // Update user in database with onboarding data
-//         const updatedUser = await User.findByIdAndUpdate(
-//             user._id,
-//             {
-//                 subjects: onboardingData.selectedSubjects,
-//                 selectedCurriculums: onboardingData.selectedCurriculums,
-//                 examPeriods: onboardingData.examPeriods,
-//                 school: onboardingData.school
-//             },
-//             { new: true }
-//         );
+        // Update user in database with onboarding data
+        const updatedUser = await User.findByIdAndUpdate(
+            user._id,
+            {
+                onboardingData,
+            },
+            { new: true }
+        );
 
-//         if (!updatedUser) throw new Error("Failed to update user");
+        if (!updatedUser) throw new Error("Failed to update user");
 
-//         // Update clerk user metadata to mark onboarding as complete
-//         const clerk = await clerkClient();
-//         await clerk.users.updateUserMetadata(user.clerkId, {
-//             publicMetadata: {
-//                 onboardingComplete: true
-//             }
-//         });
+        // Update clerk user metadata to mark onboarding as complete
+        const clerk = await clerkClient();
+        await clerk.users.updateUserMetadata(user.clerkId, {
+            publicMetadata: {
+                onboardingComplete: true,
+            },
+        });
 
-//         return JSON.parse(JSON.stringify(updatedUser));
-//     } catch (error) {
-//         console.error("Error completing onboarding:", error);
-//         throw error;
-//     }
-// }
+        return JSON.parse(JSON.stringify(updatedUser));
+    } catch (error) {
+        console.error("Error completing onboarding:", error);
+        throw error;
+    }
+}
 
 // export async function getUserSubjects(): Promise<UserSubject[]> {
 //     try {

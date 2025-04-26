@@ -1,0 +1,45 @@
+export const ageRanges = [
+    "Under 18",
+    "18–24",
+    "25–34",
+    "35–44",
+    "45–54",
+    "55–64",
+    "65+",
+];
+
+export const genderOptions = [
+    { value: "female", label: "Female" },
+    { value: "male", label: "Male" },
+    { value: "non-binary", label: "Non-binary" },
+    { value: "prefer-not-to-say", label: "Prefer not to say" },
+    { value: "self-describe", label: "Self-describe" },
+];
+
+export const founderTraits = [
+    "Introverted",
+    "Extroverted",
+    "First-Time Founder",
+    "Serial Founder",
+    "Technical Founder",
+    "Non-Technical Founder",
+    "Solo Founder",
+    "Co-Founder",
+    "Disabled Founder",
+    "Immigrant Founder",
+    "LGBTQIA+ Founder",
+    "Parent Founder",
+    "Caregiver",
+    "BIPOC Founder",
+    "Veteran",
+    "Young Founder (<25)",
+    "Older Founder (50+)",
+    "International Founder",
+    "Non-native English Speaker",
+    "Low-Income/First-Gen Founder",
+    "Self-Taught Coder",
+    "Remote/Distributed Team",
+    "Non-Urban Founder (Not in major startup hub)",
+    "Creative Background (arts/design)",
+    "Academic Background (PhD/research)",
+];

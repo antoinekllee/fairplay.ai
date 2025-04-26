@@ -9,6 +9,26 @@ declare interface CustomJwtSessionClaims {
 
 // Users
 
+declare type UserRole = "founder" | "investor";
+
+declare type FounderOnboardingData = {
+    ageRange: string;
+    genderIdentity: string;
+    genderCustom?: string;
+    traits: string[];
+    customTraits: string[];
+};
+
+declare type InvestorOnboardingData = {
+    firmName: string;
+};
+
+declare type OnboardingData = {
+    userRole: UserRole;
+    founderData?: FounderOnboardingData;
+    investorData?: InvestorOnboardingData;
+};
+
 declare type User = {
     // USER INFO
     _id: string;
@@ -19,7 +39,7 @@ declare type User = {
     photo: string;
 
     // ONBOARDING DATA
-    // TBD
+    onboardingData?: OnboardingData;
 
     createdAt: Date;
     updatedAt: Date;
@@ -33,10 +53,12 @@ declare type CreateUserParams = {
     lastName: string;
     email: string;
     photo: string;
+    onboardingData?: OnboardingData;
 };
 
 declare type UpdateUserParams = {
     firstName: string;
     lastName: string;
     photo: string;
+    onboardingData?: OnboardingData;
 };
