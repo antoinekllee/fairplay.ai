@@ -119,6 +119,7 @@ declare type Meeting = {
     _id: string;
     botId: string;
     userId: string;
+    reportId: string | null;
     createdAt: string;
     updatedAt: string;
 };

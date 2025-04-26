@@ -158,6 +158,7 @@ export async function getMeetings(): Promise<Meeting[]> {
             _id: String(meeting._id),
             botId: String(meeting.botId),
             userId: String(meeting.userId),
+            reportId: meeting.reportId ? String(meeting.reportId) : null,
             createdAt: new Date(meeting.createdAt).toISOString(),
             updatedAt: new Date(meeting.updatedAt).toISOString(),
         }));
