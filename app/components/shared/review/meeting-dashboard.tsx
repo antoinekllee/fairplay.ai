@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SummaryCards } from "./summary-cards";
 import { QuestionsList } from "./questions-list";
 import { ReportSection } from "./report-section";
+import { BarChart3, Calendar, Clock, Users } from "lucide-react";
 
 type MeetingDashboardProps = {
     reportData?: ReportData;
@@ -13,44 +14,84 @@ export default function MeetingDashboard({
     reportData = mockReportData,
 }: MeetingDashboardProps) {
     return (
-        <div className="container mx-auto py-8 px-4">
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold tracking-tight">
-                    FairPlay AI Meeting Analysis
-                </h1>
-                <p className="text-muted-foreground mt-2">
-                    Meeting between Sarah Johnson (Founder) and Michael Chen
-                    (VC) on April 24, 2025
-                </p>
-            </div>
-
-            <Tabs defaultValue="insights" className="w-full">
-                <TabsList className="mb-6">
-                    <TabsTrigger value="insights">Insights</TabsTrigger>
-                    <TabsTrigger value="transcript">
-                        Full Transcript
-                    </TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="insights" className="space-y-8">
-                    <SummaryCards data={reportData} />
-                    <QuestionsList data={reportData} />
-                    <ReportSection data={reportData} />
-                </TabsContent>
-
-                <TabsContent value="transcript">
-                    <div className="bg-white p-6 rounded-lg shadow">
-                        <h2 className="text-xl font-semibold mb-4">
-                            Meeting Transcript
-                        </h2>
-                        <div className="bg-gray-50 p-4 rounded overflow-auto max-h-[600px] text-sm">
-                            <pre className="whitespace-pre-wrap font-sans">
-                                {reportData.transcript}
-                            </pre>
+        <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-50 via-white to-white">
+            <div className="container mx-auto py-12 px-4">
+                <div className="mb-12 text-center">
+                    <div className="inline-flex items-center justify-center p-1 mb-4 bg-white/80 backdrop-blur-sm rounded-full shadow-sm border border-purple-100">
+                        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-1 rounded-full text-sm font-medium">
+                            FairPlay AI
                         </div>
                     </div>
-                </TabsContent>
-            </Tabs>
+                    <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-purple-700 via-indigo-600 to-purple-700 bg-clip-text text-transparent">
+                        Meeting Analysis Dashboard
+                    </h1>
+                    <div className="mt-4 flex flex-wrap items-center justify-center gap-4 text-sm text-gray-500">
+                        <div className="flex items-center gap-1.5">
+                            <Users className="h-4 w-4 text-indigo-500" />
+                            <span>
+                                Sarah Johnson (Founder) & Michael Chen (VC)
+                            </span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                            <Calendar className="h-4 w-4 text-indigo-500" />
+                            <span>April 24, 2025</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                            <Clock className="h-4 w-4 text-indigo-500" />
+                            <span>58m 42s</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                            <BarChart3 className="h-4 w-4 text-indigo-500" />
+                            <span>8 Questions Analyzed</span>
+                        </div>
+                    </div>
+                </div>
+
+                <Tabs defaultValue="insights" className="w-full">
+                    <div className="flex justify-center mb-10">
+                        <TabsList className="grid w-[400px] grid-cols-2 p-1 bg-white/80 backdrop-blur-sm rounded-full shadow-sm border border-purple-100">
+                            <TabsTrigger
+                                value="insights"
+                                className="rounded-full text-sm"
+                            >
+                                Insights
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="transcript"
+                                className="rounded-full text-sm"
+                            >
+                                Full Transcript
+                            </TabsTrigger>
+                        </TabsList>
+                    </div>
+
+                    <TabsContent
+                        value="insights"
+                        className="space-y-16 animate-in fade-in-50 duration-500"
+                    >
+                        <SummaryCards data={reportData} />
+                        <QuestionsList data={reportData} />
+                        <ReportSection data={reportData} />
+                    </TabsContent>
+
+                    <TabsContent
+                        value="transcript"
+                        className="animate-in fade-in-50 duration-500"
+                    >
+                        <div className="bg-white p-8 rounded-2xl shadow-xl border border-purple-100 max-w-4xl mx-auto backdrop-blur-sm">
+                            <h2 className="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
+                                <span className="inline-block w-2 h-8 bg-gradient-to-b from-purple-500 to-indigo-600 rounded-full"></span>
+                                Meeting Transcript
+                            </h2>
+                            <div className="bg-gradient-to-br from-gray-50 to-white p-6 rounded-xl overflow-auto max-h-[600px] text-sm border border-gray-100 shadow-inner">
+                                <pre className="whitespace-pre-wrap font-sans text-gray-700 leading-relaxed">
+                                    {reportData.transcript}
+                                </pre>
+                            </div>
+                        </div>
+                    </TabsContent>
+                </Tabs>
+            </div>
         </div>
     );
 }

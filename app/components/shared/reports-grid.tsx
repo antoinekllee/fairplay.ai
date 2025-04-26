@@ -6,6 +6,7 @@ import { createReport } from "@/lib/actions/report.actions";
 import { mockReportData } from "./review/meeting-dashboard";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 type ReportsGridProps = {
     reports: ReportData[];
@@ -33,8 +34,19 @@ export function ReportsGrid({ reports }: ReportsGridProps) {
                 <h2 className="text-2xl font-bold tracking-tight">
                     Your Reports
                 </h2>
-                <Button onClick={handleGenerateDummy} disabled={isGenerating}>
-                    {isGenerating ? "Generating..." : "Generate Demo Report"}
+                <Button
+                    onClick={handleGenerateDummy}
+                    disabled={isGenerating}
+                    className="min-w-[180px]"
+                >
+                    {isGenerating ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Generating...
+                        </>
+                    ) : (
+                        "Generate Demo Report"
+                    )}
                 </Button>
             </div>
 

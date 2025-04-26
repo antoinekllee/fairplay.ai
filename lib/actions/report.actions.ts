@@ -7,6 +7,7 @@ import { getUser } from "./user.actions";
 import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 import fs from "fs/promises";
 import path from "path";
+import { SYSTEM_PROMPT } from "@/constants/prompt";
 
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
@@ -171,43 +172,45 @@ const reportResponseSchema = {
     required: ["participants", "summary", "questions", "transcript", "reports"],
 };
 
-const systemPrompt = `You are an expert AI system designed to analyze venture capital pitch meetings. Your task is to analyze both the audio recording and transcript of a pitch meeting and generate a detailed report following a specific schema.
-
-Key Analysis Points:
-1. Measure talk time and interruptions for both VC and founder
-2. Analyze sentiment and tone throughout the conversation
-3. Identify and categorize questions as either promotion or prevention focused
-4. Extract key discussion points and potential concerns
-5. Provide actionable feedback for both parties
-
-Please generate a structured report that includes:
-- Participant metrics (talk time, interruptions, sentiment)
-- Meeting summary with question categorization
-- Detailed analysis of each question and response
-- Overall feedback and recommendations for both parties
-
-The output must strictly follow the provided JSON schema structure.`;
-
 async function processAudioAndTranscript(
     audioPath: string,
     transcriptPath: string
 ) {
     try {
+        console.log("🚀 Starting audio and transcript processing...");
+        console.log("📂 Reading files from:", { audioPath, transcriptPath });
+
         // Read the audio file
         const audioFile = await fs.readFile(audioPath);
         const audioBase64 = audioFile.toString("base64");
+        console.log("🎵 Audio file read successfully", {
+            audioSizeBytes: audioFile.length,
+            base64Length: audioBase64.length,
+        });
 
         // Read the transcript
         const transcript = await fs.readFile(transcriptPath, "utf-8");
+        console.log("📝 Transcript read successfully", {
+            transcriptLength: transcript.length,
+            previewText: transcript.slice(0, 100) + "...",
+        });
 
         // Setup Gemini model
+        console.log("🤖 Initializing Gemini model...");
         const model = genAI.getGenerativeModel({
             model: "gemini-2.5-pro-preview-03-25",
         });
 
+        // Log the request configuration
+        console.log("📤 Preparing Gemini API request with config:", {
+            model: "gemini-2.5-pro-preview-03-25",
+            temperature: 0.7,
+            maxOutputTokens: 8000,
+        });
+
         // Create the prompt with both audio and transcript
         const result = await model.generateContent({
-            systemInstruction: systemPrompt,
+            systemInstruction: SYSTEM_PROMPT,
             contents: [
                 {
                     role: "user",
@@ -226,12 +229,23 @@ async function processAudioAndTranscript(
                 responseMimeType: "application/json",
                 responseSchema: reportResponseSchema as any,
                 temperature: 0.7,
-                maxOutputTokens: 8000,
+                maxOutputTokens: 12000,
             },
         });
 
+        console.log("✅ Gemini API response received");
+
         const response = await result.response;
-        return JSON.parse(response.text());
+        const parsedResponse = JSON.parse(response.text());
+
+        console.log("📊 Response statistics:", {
+            questionCount: parsedResponse.questions?.length || 0,
+            keywordTriggers:
+                parsedResponse.summary?.keywordTriggers?.length || 0,
+            overallTone: parsedResponse.summary?.overallTone,
+        });
+
+        return parsedResponse;
     } catch (error) {
         console.error("Error processing audio and transcript:", error);
         throw error;
