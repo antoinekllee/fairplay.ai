@@ -259,17 +259,9 @@ export default function MeetingPage() {
                         </h2>
                         <div className="space-y-4">
                             {transcript.map((entry, index) => (
-                                <div
-                                    key={`${entry.timestamp}-${index}`}
-                                    className="border-b border-border pb-4 last:border-0"
-                                >
-                                    <p className="font-medium text-primary mb-1">
-                                        {entry.speaker}
-                                    </p>
-                                    <p className="text-sm text-muted-foreground">
-                                        {entry.transcript}
-                                    </p>
-                                </div>
+                                <p className="text-sm text-muted-foreground">
+                                    {entry.transcript}
+                                </p>
                             ))}
                         </div>
                     </Card>
