@@ -123,3 +123,13 @@ declare type Meeting = {
     createdAt: string;
     updatedAt: string;
 };
+
+declare type Transcript = Array<{
+    speaker: string;
+    transcript: string;
+    timestamp: string;
+    words: Array<{
+        // Using any for now since the actual word object structure is not shown
+        [key: string]: any;
+    }>;
+}>;
