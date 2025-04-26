@@ -1,17 +1,13 @@
 import { getUser } from "@/lib/actions/user.actions";
-import { getReports } from "@/lib/actions/report.actions";
 import { getMeetings } from "@/lib/actions/meeting.actions";
 import { FounderDataCard } from "@/app/components/shared/founder-data-card";
 import { InvestorDataCard } from "@/app/components/shared/investor-data-card";
-import { ReportsGrid } from "@/app/components/shared/reports-grid";
 import { MeetingsGrid } from "@/app/components/shared/meetings-grid";
-import { GenerateReportButton } from "@/app/components/shared/generate-report-button";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export default async function DashboardPage() {
     // const user = await getUser();
-    const reports = await getReports();
     const meetings = await getMeetings();
 
     // if (!user?.onboardingData) {
@@ -30,7 +26,6 @@ export default async function DashboardPage() {
                 <Button asChild variant="outline">
                     <Link href="/meeting/new">New Meeting</Link>
                 </Button>
-                <GenerateReportButton />
             </div>
             {/* {user.onboardingData.userRole === "founder" &&
                 user.onboardingData.founderData && (
@@ -47,7 +42,6 @@ export default async function DashboardPage() {
                 )} */}
 
             <MeetingsGrid meetings={meetings} />
-            <ReportsGrid reports={reports} />
         </div>
     );
 }

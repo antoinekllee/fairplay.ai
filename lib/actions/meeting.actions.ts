@@ -4,10 +4,6 @@ import { connectToDatabase } from "@/lib/database";
 import Meeting from "@/lib/database/models/meeting.model";
 import { revalidatePath } from "next/cache";
 import { getUser } from "./user.actions";
-import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
-import fs from "fs/promises";
-import path from "path";
-import { SYSTEM_PROMPT } from "@/constants/prompt";
 
 export async function addBotToMeeting(meetingLink: string) {
     try {
@@ -56,7 +52,7 @@ export async function addBotToMeeting(meetingLink: string) {
         });
 
         revalidatePath("/meeting/[id]");
-        return { success: true, meetingId: meeting._id };
+        return { success: true, meetingId: meeting._id.toString() };
     } catch (error) {
         console.error("Error adding bot to meeting:", error);
         return {
@@ -66,6 +62,24 @@ export async function addBotToMeeting(meetingLink: string) {
                     ? error.message
                     : "Unknown error occurred",
         };
+    }
+}
+
+export async function updateMeetingWithReport(
+    meetingId: string,
+    reportId: string
+) {
+    try {
+        await connectToDatabase();
+        const meeting = await Meeting.findByIdAndUpdate(
+            meetingId,
+            { reportId },
+            { new: true }
+        );
+        return meeting;
+    } catch (error) {
+        console.error("Error updating meeting with report:", error);
+        throw error;
     }
 }
 
@@ -84,6 +98,15 @@ export async function checkMeetingStatus(meetingId: string) {
             throw new Error("Meeting not found");
         }
 
+        // If meeting already has a report, return completed
+        if (meeting.reportId) {
+            return {
+                success: true,
+                status: "completed",
+                reportId: JSON.parse(JSON.stringify(meeting.reportId)),
+            };
+        }
+
         const response = await fetch(
             `https://api-meetstream-tst-hack.meetstream.ai/api/v1/bots/${meeting.botId}/status`,
             {
@@ -98,10 +121,11 @@ export async function checkMeetingStatus(meetingId: string) {
         }
 
         const data = await response.json();
-
-        console.log("🚀 Data:", data);
-
-        return { success: true, status: data.status };
+        return {
+            success: true,
+            status: data.status,
+            reportId: meeting.reportId,
+        };
     } catch (error) {
         console.error("Error checking meeting status:", error);
         return {
@@ -113,22 +137,6 @@ export async function checkMeetingStatus(meetingId: string) {
         };
     }
 }
-
-type MeetingDocument = {
-    _id: any;
-    botId: string;
-    userId: any;
-    createdAt: Date;
-    updatedAt: Date;
-};
-
-type Meeting = {
-    _id: string;
-    botId: string;
-    userId: string;
-    createdAt: string;
-    updatedAt: string;
-};
 
 export async function getMeetings(): Promise<Meeting[]> {
     try {

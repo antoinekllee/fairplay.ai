@@ -114,3 +114,11 @@ declare type ReportData = {
     createdAt?: string | Date;
     updatedAt?: string | Date;
 };
+
+declare type Meeting = {
+    _id: string;
+    botId: string;
+    userId: string;
+    createdAt: string;
+    updatedAt: string;
+};

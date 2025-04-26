@@ -35,7 +35,10 @@ export function NewMeetingForm() {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
             setIsLoading(true);
+
+            console.log("Sending request to addBotToMeeting");
             const result = await addBotToMeeting(values.meetingLink);
+            console.log("Request sent to addBotToMeeting");
 
             if (result.success && result.meetingId) {
                 toast.success("Meeting created successfully!");

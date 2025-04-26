@@ -8,6 +8,7 @@ type Meeting = {
     _id: string;
     botId: string;
     userId: string;
+    reportId: string | null;
     createdAt: string;
     updatedAt: string;
 };
@@ -18,6 +19,14 @@ type MeetingsGridProps = {
 
 export function MeetingsGrid({ meetings }: MeetingsGridProps) {
     const router = useRouter();
+
+    const handleCardClick = (meeting: Meeting) => {
+        if (meeting.reportId) {
+            router.push(`/reports/${meeting.reportId}`);
+        } else {
+            router.push(`/meeting/${meeting._id}`);
+        }
+    };
 
     return (
         <div className="space-y-6">
@@ -32,7 +41,7 @@ export function MeetingsGrid({ meetings }: MeetingsGridProps) {
                     <Card
                         key={meeting._id}
                         className="p-4 hover:bg-accent/50 transition-colors cursor-pointer"
-                        onClick={() => router.push(`/meeting/${meeting._id}`)}
+                        onClick={() => handleCardClick(meeting)}
                     >
                         <div className="space-y-2">
                             <div className="flex justify-between items-start">
@@ -41,7 +50,15 @@ export function MeetingsGrid({ meetings }: MeetingsGridProps) {
                                         meeting.createdAt
                                     ).toLocaleDateString()}
                                 </p>
-                                <Badge variant="outline">Active</Badge>
+                                <Badge
+                                    variant={
+                                        meeting.reportId ? "default" : "outline"
+                                    }
+                                >
+                                    {meeting.reportId
+                                        ? "Report Ready"
+                                        : "In Progress"}
+                                </Badge>
                             </div>
                             <div className="flex justify-between items-center">
                                 <div>

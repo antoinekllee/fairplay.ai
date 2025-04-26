@@ -295,13 +295,13 @@ export async function getReportById(reportId: string) {
     }
 }
 
-export async function createReport(reportData: ReportData) {
+export async function createReport(meetingId: string) {
     try {
         await connectToDatabase();
         const user = await getUser();
         if (!user) throw new Error("User not found");
 
-        // Process the audio and transcript files
+        // For now, use test data
         const audioPath = path.join(
             process.cwd(),
             "public",
