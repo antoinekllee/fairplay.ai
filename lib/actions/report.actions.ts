@@ -266,10 +266,10 @@ export async function getReportById(reportId: string) {
 
         const report = await Report.findOne({
             _id: reportId,
-            $or: [
-                { "participants.founder.userId": user._id },
-                { "participants.vc.userId": user._id },
-            ],
+            // $or: [
+            //     { "participants.founder.userId": user._id },
+            //     { "participants.vc.userId": user._id },
+            // ],
         });
 
         if (!report) throw new Error("Report not found");
@@ -325,7 +325,7 @@ export async function createReport(meetingId: string) {
         const newReport = await Report.create(generatedReport);
         revalidatePath("/dashboard");
 
-        redirect(`/reports/${newReport._id}`);
+        // redirect(`/reports/${newReport._id}`);
 
         return JSON.parse(JSON.stringify(newReport));
     } catch (error) {

@@ -4,10 +4,10 @@ export async function POST(req: Request) {
     try {
         const payload = await req.json();
 
-        console.log("payload");
-        console.log(payload);
+        // console.log("payload");
+        // console.log(payload);
 
-        console.log("Transcript received:", JSON.stringify(payload, null, 2));
+        // console.log("Transcript received:", JSON.stringify(payload, null, 2));
 
         return NextResponse.json({ status: "received" });
     } catch (error) {
