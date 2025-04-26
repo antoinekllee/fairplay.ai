@@ -1,3 +1,32 @@
+## Notes:
+
+wss web socket
+
+Realtime -> webhook
+
+Making webhook consmuer:
+
+-   Shared in group/drive link in a folder w/ 2 pieces of code
+-   webhook.site -> testing webhooks
+-   Create bot with the /create_bot, do this once per meeting session
+-   They will be admitted to join
+-   Need same email as the host of the meeting - else permission issues
+-
+
+Transcription coming live as objects constantly pushed
+
+API to remove bot at end of meeting
+
+Only 2 options -> get audio and get transcript, no video stream available
+
+Deepgram -> default for audio transcription
+
+Tracks
+
+-   Any ai agent, chatbot agents, voice agents
+-   Voice + meeting agents -> voice based communication, automate meetings with REALTIME transcriptions and insights
+-   MCP -> make MCP servers, build integrations
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
@@ -24,8 +53,8 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+-   [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+-   [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
